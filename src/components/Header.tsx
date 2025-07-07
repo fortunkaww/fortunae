@@ -2,6 +2,8 @@
 import React from 'react';
 import { Shield, Menu, X } from 'lucide-react';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import DownloadButton from './DownloadButton';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -10,19 +12,20 @@ const Header = () => {
     <header className="bg-slate-900 text-white sticky top-0 z-50">
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-2">
+          <Link to="/" className="flex items-center space-x-2">
             <Shield className="h-8 w-8 text-blue-400" />
             <span className="text-xl font-bold">Fortune VPN</span>
-          </div>
+          </Link>
           
           <nav className="hidden md:flex items-center space-x-8">
             <a href="#features" className="hover:text-blue-400 transition-colors">Features</a>
             <a href="#pricing" className="hover:text-blue-400 transition-colors">Pricing</a>
             <a href="#faq" className="hover:text-blue-400 transition-colors">FAQ</a>
             <a href="#contact" className="hover:text-blue-400 transition-colors">Contact</a>
-            <button className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg transition-colors">
+            <Link to="/become-partners" className="hover:text-blue-400 transition-colors">Partners</Link>
+            <DownloadButton className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg transition-colors">
               Get Started
-            </button>
+            </DownloadButton>
           </nav>
 
           <button 
@@ -40,9 +43,10 @@ const Header = () => {
               <a href="#pricing" className="hover:text-blue-400 transition-colors">Pricing</a>
               <a href="#faq" className="hover:text-blue-400 transition-colors">FAQ</a>
               <a href="#contact" className="hover:text-blue-400 transition-colors">Contact</a>
-              <button className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg transition-colors w-fit">
+              <Link to="/become-partners" className="hover:text-blue-400 transition-colors">Partners</Link>
+              <DownloadButton className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg transition-colors w-fit">
                 Get Started
-              </button>
+              </DownloadButton>
             </div>
           </nav>
         )}

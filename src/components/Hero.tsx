@@ -1,6 +1,6 @@
-
 import React from 'react';
 import { Play, Shield, Globe, Zap } from 'lucide-react';
+import DownloadButton from './DownloadButton';
 
 const Hero = () => {
   return (
@@ -18,9 +18,9 @@ const Hero = () => {
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 mb-8">
-              <button className="bg-blue-600 hover:bg-blue-700 px-8 py-4 rounded-lg text-lg font-semibold transition-all transform hover:scale-105">
+              <DownloadButton className="bg-blue-600 hover:bg-blue-700 px-8 py-4 rounded-lg text-lg font-semibold transition-all transform hover:scale-105">
                 Start Free Trial
-              </button>
+              </DownloadButton>
               <button className="border border-white/30 hover:border-white px-8 py-4 rounded-lg text-lg font-semibold transition-all flex items-center justify-center space-x-2">
                 <Play className="h-5 w-5" />
                 <span>Watch Demo</span>

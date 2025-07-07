@@ -1,6 +1,6 @@
-
 import React from 'react';
 import { Check, Star } from 'lucide-react';
+import DownloadButton from './DownloadButton';
 
 const Pricing = () => {
   const plans = [
@@ -103,13 +103,13 @@ const Pricing = () => {
                 ))}
               </ul>
 
-              <button className={`w-full py-4 rounded-lg font-semibold transition-all ${
+              <DownloadButton className={`w-full py-4 rounded-lg font-semibold transition-all ${
                 plan.popular 
                   ? 'bg-blue-600 hover:bg-blue-700' 
                   : 'bg-slate-700 hover:bg-slate-600 border border-slate-600'
               }`}>
                 Get Started
-              </button>
+              </DownloadButton>
             </div>
           ))}
         </div>
