@@ -1,15 +1,14 @@
+
 import React, { useState, useEffect } from 'react';
-import { Shield, Plus, Trash2, Eye, EyeOff } from 'lucide-react';
+import { ArrowLeft, Plus, Trash2, Key, Shield } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Admin = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-  const [codes, setCodes] = useState<string[]>([]);
+  const [codes, setCodes] = useState<Array<{code: string, createdAt: string}>>([]);
   const [newCode, setNewCode] = useState('');
   const [error, setError] = useState('');
-
-  const ADMIN_PASSWORD = 'zxcdead12AS!';
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -18,148 +17,153 @@ const Admin = () => {
   }, [isAuthenticated]);
 
   const loadCodes = () => {
-    const savedCodes = JSON.parse(localStorage.getItem('fortuneVpnCodes') || '[]');
+    const savedCodes = JSON.parse(localStorage.getItem('fortunevpn_codes') || '[]');
     setCodes(savedCodes);
-  };
-
-  const saveCodes = (newCodes: string[]) => {
-    localStorage.setItem('fortuneVpnCodes', JSON.stringify(newCodes));
-    setCodes(newCodes);
   };
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (password === ADMIN_PASSWORD) {
+    if (password === 'zxcdead12AS!') {
       setIsAuthenticated(true);
       setError('');
     } else {
-      setError('Invalid password');
+      setError('Incorrect password');
     }
   };
 
-  const addCode = () => {
-    if (newCode.trim() && !codes.includes(newCode.trim())) {
-      const updatedCodes = [...codes, newCode.trim()];
-      saveCodes(updatedCodes);
-      setNewCode('');
-    }
+  const handleAddCode = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newCode.trim()) return;
+
+    const newCodeObj = {
+      code: newCode.trim(),
+      createdAt: new Date().toISOString()
+    };
+
+    const updatedCodes = [...codes, newCodeObj];
+    setCodes(updatedCodes);
+    localStorage.setItem('fortunevpn_codes', JSON.stringify(updatedCodes));
+    setNewCode('');
   };
 
-  const deleteCode = (codeToDelete: string) => {
-    const updatedCodes = codes.filter(code => code !== codeToDelete);
-    saveCodes(updatedCodes);
-  };
-
-  const generateRandomCode = () => {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    let result = '';
-    for (let i = 0; i < 8; i++) {
-      result += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    setNewCode(result);
+  const handleDeleteCode = (codeToDelete: string) => {
+    const updatedCodes = codes.filter(c => c.code !== codeToDelete);
+    setCodes(updatedCodes);
+    localStorage.setItem('fortunevpn_codes', JSON.stringify(updatedCodes));
   };
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-slate-900 text-white flex items-center justify-center">
-        <div className="bg-slate-800 rounded-lg p-8 shadow-xl max-w-md w-full mx-4">
-          <div className="text-center mb-6">
-            <Shield className="h-12 w-12 text-purple-400 mx-auto mb-4" />
-            <h1 className="text-2xl font-bold mb-2">Admin Login</h1>
-            <p className="text-gray-400">Enter the admin password to access the panel</p>
+      <div className="min-h-screen bg-gradient-to-br from-purple-900 via-indigo-900 to-purple-900 text-white flex items-center justify-center">
+        <div className="bg-gradient-to-r from-purple-800 to-indigo-800 p-8 rounded-2xl shadow-2xl max-w-md w-full border border-purple-600">
+          <div className="text-center mb-8">
+            <Shield className="h-16 w-16 text-purple-300 mx-auto mb-4" />
+            <h1 className="text-3xl font-bold">Admin Access</h1>
+            <p className="text-purple-200 mt-2">Enter admin password to continue</p>
           </div>
 
-          <form onSubmit={handleLogin} className="space-y-4">
-            <div className="relative">
+          <form onSubmit={handleLogin}>
+            <div className="mb-6">
+              <label htmlFor="password" className="block text-purple-200 font-semibold mb-2">
+                Password
+              </label>
               <input
-                type={showPassword ? 'text' : 'password'}
+                type="password"
+                id="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                className="w-full px-4 py-3 bg-purple-900 border border-purple-600 rounded-lg text-white placeholder-purple-300 focus:outline-none focus:border-purple-400 focus:ring-2 focus:ring-purple-400"
                 placeholder="Enter admin password"
-                className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg focus:outline-none focus:border-purple-400 text-white placeholder-gray-400 pr-12"
+                required
               />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white"
-              >
-                {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-              </button>
             </div>
 
             {error && (
-              <div className="text-red-400 text-sm">{error}</div>
+              <div className="mb-4 p-3 bg-red-500/20 border border-red-500 rounded-lg">
+                <p className="text-red-200 text-sm">{error}</p>
+              </div>
             )}
 
             <button
               type="submit"
-              className="w-full bg-purple-600 hover:bg-purple-700 px-4 py-3 rounded-lg font-semibold transition-colors"
+              className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-6 py-3 rounded-lg font-semibold transition-all shadow-lg"
             >
               Login
             </button>
           </form>
+
+          <div className="text-center mt-6">
+            <Link to="/" className="text-purple-300 hover:text-purple-200 text-sm">
+              ← Back to Home
+            </Link>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-900 text-white">
+    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-indigo-900 to-purple-900 text-white">
       <div className="container mx-auto px-4 py-8">
+        <div className="flex items-center justify-between mb-8">
+          <Link to="/" className="inline-flex items-center space-x-2 text-purple-300 hover:text-purple-200">
+            <ArrowLeft className="h-4 w-4" />
+            <span>Back to Home</span>
+          </Link>
+          <button
+            onClick={() => setIsAuthenticated(false)}
+            className="text-purple-300 hover:text-purple-200"
+          >
+            Logout
+          </button>
+        </div>
+
         <div className="max-w-4xl mx-auto">
-          <div className="flex items-center justify-between mb-8">
-            <h1 className="text-3xl font-bold">Admin Panel</h1>
-            <button
-              onClick={() => setIsAuthenticated(false)}
-              className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg transition-colors"
-            >
-              Logout
-            </button>
+          <div className="text-center mb-8">
+            <Key className="h-16 w-16 text-purple-300 mx-auto mb-4" />
+            <h1 className="text-4xl font-bold mb-4">Code Management</h1>
+            <p className="text-purple-200">Manage access codes for Fortune VPN downloads</p>
           </div>
 
-          <div className="bg-slate-800 rounded-lg p-6 mb-8">
-            <h2 className="text-xl font-semibold mb-4">Add New Code</h2>
-            <div className="flex space-x-4">
+          <div className="bg-gradient-to-r from-purple-800 to-indigo-800 rounded-2xl p-8 mb-8 border border-purple-600">
+            <h2 className="text-2xl font-bold mb-6">Create New Code</h2>
+            <form onSubmit={handleAddCode} className="flex gap-4">
               <input
                 type="text"
                 value={newCode}
                 onChange={(e) => setNewCode(e.target.value)}
-                placeholder="Enter new code"
-                className="flex-1 px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg focus:outline-none focus:border-purple-400 text-white placeholder-gray-400"
+                className="flex-1 px-4 py-3 bg-purple-900 border border-purple-600 rounded-lg text-white placeholder-purple-300 focus:outline-none focus:border-purple-400 focus:ring-2 focus:ring-purple-400"
+                placeholder="Enter new access code"
+                required
               />
               <button
-                onClick={generateRandomCode}
-                className="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-lg transition-colors"
-              >
-                Generate
-              </button>
-              <button
-                onClick={addCode}
-                className="bg-green-600 hover:bg-green-700 px-4 py-2 rounded-lg transition-colors flex items-center space-x-2"
+                type="submit"
+                className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white px-6 py-3 rounded-lg font-semibold transition-all flex items-center space-x-2 shadow-lg"
               >
                 <Plus className="h-4 w-4" />
-                <span>Add</span>
+                <span>Add Code</span>
               </button>
-            </div>
+            </form>
           </div>
 
-          <div className="bg-slate-800 rounded-lg p-6">
-            <h2 className="text-xl font-semibold mb-4">Existing Codes ({codes.length})</h2>
-            <p className="text-sm text-gray-400 mb-4">Note: All codes have unlimited uses</p>
+          <div className="bg-gradient-to-r from-purple-800 to-indigo-800 rounded-2xl p-8 border border-purple-600">
+            <h2 className="text-2xl font-bold mb-6">Existing Codes ({codes.length})</h2>
             
             {codes.length === 0 ? (
-              <p className="text-gray-400">No codes created yet.</p>
+              <p className="text-purple-200 text-center py-8">No codes created yet</p>
             ) : (
-              <div className="space-y-2">
-                {codes.map((code, index) => (
-                  <div key={index} className="flex items-center justify-between bg-slate-700 p-3 rounded-lg">
-                    <div className="flex items-center space-x-3">
-                      <span className="font-mono text-green-400">{code}</span>
-                      <span className="text-xs text-gray-400">Unlimited uses</span>
+              <div className="space-y-4">
+                {codes.map((codeObj, index) => (
+                  <div key={index} className="bg-purple-900 p-4 rounded-lg flex items-center justify-between border border-purple-700">
+                    <div>
+                      <p className="font-mono text-lg text-purple-100">{codeObj.code}</p>
+                      <p className="text-purple-300 text-sm">
+                        Created: {new Date(codeObj.createdAt).toLocaleString()}
+                      </p>
                     </div>
                     <button
-                      onClick={() => deleteCode(code)}
-                      className="text-red-400 hover:text-red-300 transition-colors"
+                      onClick={() => handleDeleteCode(codeObj.code)}
+                      className="bg-red-600 hover:bg-red-700 text-white p-2 rounded-lg transition-colors"
                     >
                       <Trash2 className="h-4 w-4" />
                     </button>

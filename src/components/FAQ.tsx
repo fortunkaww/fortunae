@@ -33,13 +33,13 @@ const FAQ = () => {
   ];
 
   return (
-    <section id="faq" className="py-20 bg-gray-50">
+    <section id="faq" className="py-20 bg-gradient-to-br from-purple-50 to-pink-50">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold text-slate-900 mb-4">
+          <h2 className="text-4xl font-bold text-purple-900 mb-4">
             Frequently Asked Questions
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="text-xl text-purple-700 max-w-3xl mx-auto">
             Have questions about Fortune VPN? We've got answers. If you can't find what you're looking for, 
             feel free to contact our support team.
           </p>
@@ -47,24 +47,24 @@ const FAQ = () => {
 
         <div className="max-w-4xl mx-auto">
           {faqs.map((faq, index) => (
-            <div key={index} className="bg-white rounded-lg shadow-sm mb-4 overflow-hidden">
+            <div key={index} className="bg-white rounded-lg shadow-lg mb-4 overflow-hidden border border-purple-100">
               <button
-                className="w-full px-8 py-6 text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
+                className="w-full px-8 py-6 text-left flex items-center justify-between hover:bg-gradient-to-r hover:from-purple-50 hover:to-pink-50 transition-all duration-300"
                 onClick={() => setOpenIndex(openIndex === index ? -1 : index)}
               >
-                <span className="text-lg font-semibold text-slate-900">
+                <span className="text-lg font-semibold text-purple-900">
                   {faq.question}
                 </span>
                 {openIndex === index ? (
-                  <ChevronUp className="h-5 w-5 text-blue-600" />
+                  <ChevronUp className="h-5 w-5 text-purple-600" />
                 ) : (
-                  <ChevronDown className="h-5 w-5 text-gray-400" />
+                  <ChevronDown className="h-5 w-5 text-purple-400" />
                 )}
               </button>
               
               {openIndex === index && (
-                <div className="px-8 pb-6">
-                  <p className="text-gray-600 leading-relaxed">
+                <div className="px-8 pb-6 bg-gradient-to-r from-purple-50 to-pink-50">
+                  <p className="text-purple-700 leading-relaxed">
                     {faq.answer}
                   </p>
                 </div>

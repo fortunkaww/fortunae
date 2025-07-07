@@ -5,43 +5,43 @@ import DownloadButton from './DownloadButton';
 
 const Hero = () => {
   return (
-    <section className="bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white py-20">
+    <section className="bg-gradient-to-br from-purple-900 via-indigo-900 to-purple-900 text-white py-20">
       <div className="container mx-auto px-4">
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <div>
             <h1 className="text-5xl md:text-6xl font-bold mb-6 leading-tight">
               Secure Your
-              <span className="text-purple-400 block">Digital Life</span>
+              <span className="text-purple-300 block">Digital Life</span>
             </h1>
-            <p className="text-xl mb-8 text-gray-300">
+            <p className="text-xl mb-8 text-purple-100">
               Fortune VPN provides military-grade encryption and lightning-fast speeds 
               to protect your privacy online. Connect to 5000+ servers worldwide.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 mb-8">
-              <DownloadButton className="bg-purple-600 hover:bg-purple-700 px-8 py-4 rounded-lg text-lg font-semibold transition-all transform hover:scale-105">
+              <DownloadButton className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 px-8 py-4 rounded-lg text-lg font-semibold transition-all transform hover:scale-105 shadow-lg">
                 Start Free Trial
               </DownloadButton>
             </div>
 
-            <div className="flex items-center space-x-8 text-sm text-gray-400">
+            <div className="flex items-center space-x-8 text-sm text-purple-200">
               <div className="flex items-center space-x-2">
-                <Shield className="h-4 w-4 text-green-400" />
+                <Shield className="h-4 w-4 text-purple-300" />
                 <span>30-day money back</span>
               </div>
               <div className="flex items-center space-x-2">
-                <Globe className="h-4 w-4 text-green-400" />
+                <Globe className="h-4 w-4 text-purple-300" />
                 <span>5000+ servers</span>
               </div>
               <div className="flex items-center space-x-2">
-                <Zap className="h-4 w-4 text-green-400" />
+                <Zap className="h-4 w-4 text-purple-300" />
                 <span>Ultra-fast speeds</span>
               </div>
             </div>
           </div>
 
           <div className="relative">
-            <div className="bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl p-8 transform rotate-3 hover:rotate-0 transition-transform duration-300">
+            <div className="bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl p-8 transform rotate-3 hover:rotate-0 transition-transform duration-300 shadow-2xl">
               <div className="bg-white rounded-xl p-6 text-slate-900">
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center space-x-2">
@@ -55,7 +55,7 @@ const Hero = () => {
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
                     <span className="text-sm">Connection Status</span>
-                    <span className="text-green-600 font-semibold">Connected</span>
+                    <span className="text-purple-600 font-semibold">Connected</span>
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-sm">Server Location</span>
@@ -66,7 +66,7 @@ const Hero = () => {
                     <span className="font-mono text-sm">192.168.1.***</span>
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div className="bg-purple-600 h-2 rounded-full w-4/5"></div>
+                    <div className="bg-gradient-to-r from-purple-600 to-pink-600 h-2 rounded-full w-4/5"></div>
                   </div>
                 </div>
               </div>
