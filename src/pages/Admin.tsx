@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Shield, Plus, Trash2, Eye, EyeOff } from 'lucide-react';
 
@@ -65,7 +64,7 @@ const Admin = () => {
       <div className="min-h-screen bg-slate-900 text-white flex items-center justify-center">
         <div className="bg-slate-800 rounded-lg p-8 shadow-xl max-w-md w-full mx-4">
           <div className="text-center mb-6">
-            <Shield className="h-12 w-12 text-blue-400 mx-auto mb-4" />
+            <Shield className="h-12 w-12 text-purple-400 mx-auto mb-4" />
             <h1 className="text-2xl font-bold mb-2">Admin Login</h1>
             <p className="text-gray-400">Enter the admin password to access the panel</p>
           </div>
@@ -77,7 +76,7 @@ const Admin = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Enter admin password"
-                className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg focus:outline-none focus:border-blue-400 text-white placeholder-gray-400 pr-12"
+                className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg focus:outline-none focus:border-purple-400 text-white placeholder-gray-400 pr-12"
               />
               <button
                 type="button"
@@ -94,7 +93,7 @@ const Admin = () => {
 
             <button
               type="submit"
-              className="w-full bg-blue-600 hover:bg-blue-700 px-4 py-3 rounded-lg font-semibold transition-colors"
+              className="w-full bg-purple-600 hover:bg-purple-700 px-4 py-3 rounded-lg font-semibold transition-colors"
             >
               Login
             </button>
@@ -126,7 +125,7 @@ const Admin = () => {
                 value={newCode}
                 onChange={(e) => setNewCode(e.target.value)}
                 placeholder="Enter new code"
-                className="flex-1 px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg focus:outline-none focus:border-blue-400 text-white placeholder-gray-400"
+                className="flex-1 px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg focus:outline-none focus:border-purple-400 text-white placeholder-gray-400"
               />
               <button
                 onClick={generateRandomCode}
@@ -146,6 +145,7 @@ const Admin = () => {
 
           <div className="bg-slate-800 rounded-lg p-6">
             <h2 className="text-xl font-semibold mb-4">Existing Codes ({codes.length})</h2>
+            <p className="text-sm text-gray-400 mb-4">Note: All codes have unlimited uses</p>
             
             {codes.length === 0 ? (
               <p className="text-gray-400">No codes created yet.</p>
@@ -153,7 +153,10 @@ const Admin = () => {
               <div className="space-y-2">
                 {codes.map((code, index) => (
                   <div key={index} className="flex items-center justify-between bg-slate-700 p-3 rounded-lg">
-                    <span className="font-mono text-green-400">{code}</span>
+                    <div className="flex items-center space-x-3">
+                      <span className="font-mono text-green-400">{code}</span>
+                      <span className="text-xs text-gray-400">Unlimited uses</span>
+                    </div>
                     <button
                       onClick={() => deleteCode(code)}
                       className="text-red-400 hover:text-red-300 transition-colors"
