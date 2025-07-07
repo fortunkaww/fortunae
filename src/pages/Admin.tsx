@@ -1,34 +1,54 @@
+
 import React, { useState, useEffect } from 'react';
-import { Plus, Trash2, Copy } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
+import { Shield, Plus, Trash2, Eye, EyeOff } from 'lucide-react';
 
 const Admin = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [codes, setCodes] = useState<string[]>([]);
   const [newCode, setNewCode] = useState('');
-  const { toast } = useToast();
+  const [error, setError] = useState('');
+
+  const ADMIN_PASSWORD = 'zxcdead12AS!';
 
   useEffect(() => {
-    // Load codes from localStorage
-    const savedCodes = JSON.parse(localStorage.getItem('validCodes') || '[]');
-    setCodes(savedCodes);
-  }, []);
-
-  const authenticate = () => {
-    if (password === 'zxcdead12AS!') {
-      setIsAuthenticated(true);
-      toast({
-        title: "Access Granted",
-        description: "Welcome to the admin panel.",
-      });
-    } else {
-      toast({
-        title: "Access Denied",
-        description: "Invalid password.",
-        variant: "destructive",
-      });
+    if (isAuthenticated) {
+      loadCodes();
     }
+  }, [isAuthenticated]);
+
+  const loadCodes = () => {
+    const savedCodes = JSON.parse(localStorage.getItem('fortuneVpnCodes') || '[]');
+    setCodes(savedCodes);
+  };
+
+  const saveCodes = (newCodes: string[]) => {
+    localStorage.setItem('fortuneVpnCodes', JSON.stringify(newCodes));
+    setCodes(newCodes);
+  };
+
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (password === ADMIN_PASSWORD) {
+      setIsAuthenticated(true);
+      setError('');
+    } else {
+      setError('Invalid password');
+    }
+  };
+
+  const addCode = () => {
+    if (newCode.trim() && !codes.includes(newCode.trim())) {
+      const updatedCodes = [...codes, newCode.trim()];
+      saveCodes(updatedCodes);
+      setNewCode('');
+    }
+  };
+
+  const deleteCode = (codeToDelete: string) => {
+    const updatedCodes = codes.filter(code => code !== codeToDelete);
+    saveCodes(updatedCodes);
   };
 
   const generateRandomCode = () => {
@@ -37,152 +57,113 @@ const Admin = () => {
     for (let i = 0; i < 8; i++) {
       result += chars.charAt(Math.floor(Math.random() * chars.length));
     }
-    return result;
-  };
-
-  const addCode = () => {
-    const codeToAdd = newCode.trim().toUpperCase() || generateRandomCode();
-    if (codes.includes(codeToAdd)) {
-      toast({
-        title: "Code Already Exists",
-        description: "This code is already in the system.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    const updatedCodes = [...codes, codeToAdd];
-    setCodes(updatedCodes);
-    localStorage.setItem('validCodes', JSON.stringify(updatedCodes));
-    setNewCode('');
-    
-    toast({
-      title: "Code Added",
-      description: `Code ${codeToAdd} has been added successfully.`,
-    });
-  };
-
-  const removeCode = (codeToRemove: string) => {
-    const updatedCodes = codes.filter(code => code !== codeToRemove);
-    setCodes(updatedCodes);
-    localStorage.setItem('validCodes', JSON.stringify(updatedCodes));
-    
-    toast({
-      title: "Code Removed",
-      description: `Code ${codeToRemove} has been removed.`,
-    });
-  };
-
-  const copyCode = (code: string) => {
-    navigator.clipboard.writeText(code);
-    toast({
-      title: "Copied!",
-      description: `Code ${code} copied to clipboard.`,
-    });
+    setNewCode(result);
   };
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 text-white flex items-center justify-center">
-        <div className="bg-slate-800 rounded-2xl p-8 w-full max-w-md">
-          <h1 className="text-3xl font-bold text-center mb-8">Admin Access</h1>
-          
-          <div className="mb-6">
-            <label htmlFor="password" className="block text-lg font-semibold mb-3">
-              Password
-            </label>
-            <input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              onKeyPress={(e) => e.key === 'Enter' && authenticate()}
-              placeholder="Enter admin password"
-              className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+      <div className="min-h-screen bg-slate-900 text-white flex items-center justify-center">
+        <div className="bg-slate-800 rounded-lg p-8 shadow-xl max-w-md w-full mx-4">
+          <div className="text-center mb-6">
+            <Shield className="h-12 w-12 text-blue-400 mx-auto mb-4" />
+            <h1 className="text-2xl font-bold mb-2">Admin Login</h1>
+            <p className="text-gray-400">Enter the admin password to access the panel</p>
           </div>
 
-          <button
-            onClick={authenticate}
-            className="w-full bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-lg font-semibold transition-colors"
-          >
-            Login
-          </button>
+          <form onSubmit={handleLogin} className="space-y-4">
+            <div className="relative">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Enter admin password"
+                className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg focus:outline-none focus:border-blue-400 text-white placeholder-gray-400 pr-12"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white"
+              >
+                {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+              </button>
+            </div>
+
+            {error && (
+              <div className="text-red-400 text-sm">{error}</div>
+            )}
+
+            <button
+              type="submit"
+              className="w-full bg-blue-600 hover:bg-blue-700 px-4 py-3 rounded-lg font-semibold transition-colors"
+            >
+              Login
+            </button>
+          </form>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 text-white">
+    <div className="min-h-screen bg-slate-900 text-white">
       <div className="container mx-auto px-4 py-8">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-4xl font-bold">Admin Panel</h1>
-          <button
-            onClick={() => setIsAuthenticated(false)}
-            className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg transition-colors"
-          >
-            Logout
-          </button>
-        </div>
-
-        <div className="grid lg:grid-cols-2 gap-8">
-          {/* Add New Code */}
-          <div className="bg-slate-800 rounded-2xl p-6">
-            <h2 className="text-2xl font-bold mb-6">Generate Partnership Code</h2>
-            
-            <div className="mb-4">
-              <label htmlFor="newCode" className="block text-lg font-semibold mb-3">
-                Custom Code (Optional)
-              </label>
-              <input
-                id="newCode"
-                type="text"
-                value={newCode}
-                onChange={(e) => setNewCode(e.target.value.toUpperCase())}
-                placeholder="Leave empty for random code"
-                className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-
+        <div className="max-w-4xl mx-auto">
+          <div className="flex items-center justify-between mb-8">
+            <h1 className="text-3xl font-bold">Admin Panel</h1>
             <button
-              onClick={addCode}
-              className="w-full bg-green-600 hover:bg-green-700 px-6 py-3 rounded-lg font-semibold transition-colors flex items-center justify-center space-x-2"
+              onClick={() => setIsAuthenticated(false)}
+              className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg transition-colors"
             >
-              <Plus className="h-5 w-5" />
-              <span>Add Code</span>
+              Logout
             </button>
           </div>
 
-          {/* Existing Codes */}
-          <div className="bg-slate-800 rounded-2xl p-6">
-            <h2 className="text-2xl font-bold mb-6">Active Codes ({codes.length})</h2>
-            
-            <div className="space-y-3 max-h-96 overflow-y-auto">
-              {codes.length === 0 ? (
-                <p className="text-gray-400 text-center py-8">No codes created yet</p>
-              ) : (
-                codes.map((code, index) => (
-                  <div key={index} className="bg-slate-700 rounded-lg p-4 flex items-center justify-between">
-                    <span className="font-mono text-lg">{code}</span>
-                    <div className="flex space-x-2">
-                      <button
-                        onClick={() => copyCode(code)}
-                        className="text-blue-400 hover:text-blue-300 p-2 rounded transition-colors"
-                      >
-                        <Copy className="h-4 w-4" />
-                      </button>
-                      <button
-                        onClick={() => removeCode(code)}
-                        className="text-red-400 hover:text-red-300 p-2 rounded transition-colors"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </button>
-                    </div>
-                  </div>
-                ))
-              )}
+          <div className="bg-slate-800 rounded-lg p-6 mb-8">
+            <h2 className="text-xl font-semibold mb-4">Add New Code</h2>
+            <div className="flex space-x-4">
+              <input
+                type="text"
+                value={newCode}
+                onChange={(e) => setNewCode(e.target.value)}
+                placeholder="Enter new code"
+                className="flex-1 px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg focus:outline-none focus:border-blue-400 text-white placeholder-gray-400"
+              />
+              <button
+                onClick={generateRandomCode}
+                className="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-lg transition-colors"
+              >
+                Generate
+              </button>
+              <button
+                onClick={addCode}
+                className="bg-green-600 hover:bg-green-700 px-4 py-2 rounded-lg transition-colors flex items-center space-x-2"
+              >
+                <Plus className="h-4 w-4" />
+                <span>Add</span>
+              </button>
             </div>
+          </div>
+
+          <div className="bg-slate-800 rounded-lg p-6">
+            <h2 className="text-xl font-semibold mb-4">Existing Codes ({codes.length})</h2>
+            
+            {codes.length === 0 ? (
+              <p className="text-gray-400">No codes created yet.</p>
+            ) : (
+              <div className="space-y-2">
+                {codes.map((code, index) => (
+                  <div key={index} className="flex items-center justify-between bg-slate-700 p-3 rounded-lg">
+                    <span className="font-mono text-green-400">{code}</span>
+                    <button
+                      onClick={() => deleteCode(code)}
+                      className="text-red-400 hover:text-red-300 transition-colors"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </div>
